@@ -106,24 +106,6 @@ public:
     }
 };
 
-class BCJsonObject
-{
-private:
-    BCJsonValue mNull;
-    std::map<std::string, BCJsonValue> mMembers;
-
-public:
-    template<typename T> void add(const std::string& key, const T& value) {
-        mMembers[key] = BCJsonValue(value);
-    }
-    size_t size() const {
-        return mMembers.size();
-    }
-    BCJsonValue& get(const std::string& key) {
-        return mMembers[key];
-    }
-};
-
 class BCJsonArray
 {
     std::vector<BCJsonValue> mArray;
