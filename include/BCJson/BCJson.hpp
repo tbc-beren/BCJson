@@ -57,10 +57,18 @@ public:
         , mValUnsigned(i)
         {}
 
+    void assertType(BCJsonValueType type, bool nullIsValid = true) const {
+        if(( !nullIsValid && (BCJsonValueNull == mType || BCJsonValueNull == type)) ||
+           ( type != mType && BCJsonValueNull != mType) ) {
+            throw BCJsonInvalidTypeException(mType);
+        }
+    }
     void setType(BCJsonValueType type) {
+        assertType(type, true);
         mType = type;
     }
     template<typename T> BCJsonValue& set(const std::string& key, const T& value) {
+        setType(BCJsonValueObject);
         mMembers[key] = BCJsonValue(value);
         return mMembers[key];
     }
@@ -68,12 +76,10 @@ public:
         return mMembers[key];
     }
     const BCJsonValue& get(const std::string& key) const {
-        if (BCJsonValueObject != getType()) {
-            throw BCJsonException("invalid type");
-        }
+        assertType(BCJsonValueObject, false);
         const std::map<std::string, BCJsonValue>::const_iterator it = mMembers.find(key);
         if (mMembers.end() == it) {
-            throw BCJsonException("invalid key");
+            throw BCJsonInvalidKeyException(key);
         }
         return it->second;
     }
@@ -100,7 +106,7 @@ public:
     }
     const BCJsonArray& getArray() const {
         if (BCJsonValueArray != getType() || !mArr) {
-            throw BCJsonException("invalid");
+            throw BCJsonInvalidTypeException(getType());
         }
         return *mArr;
     }

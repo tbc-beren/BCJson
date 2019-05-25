@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include "testTools.h"
+
 #include <BCJson/BCJson.hpp>
 
 namespace {
@@ -23,8 +25,7 @@ namespace {
         array.add(HUNDRED);
 
         ASSERT_EQ(5, array.size());
-        EXPECT_EQ(BCJsonValueString, array.get(0).getType());
-        EXPECT_EQ("ItemString", array.get(0).getString());
+        BCTestTools::checkString(array, 0, "ItemString");
         EXPECT_EQ(BCJsonValueFloat, array.get(1).getType());
         EXPECT_EQ(PI, array.get(1).getDouble());
         EXPECT_EQ(BCJsonValueFloat, array.get(2).getType());
@@ -48,17 +49,14 @@ namespace {
         }
 
         ASSERT_EQ(3, array.size());
-        EXPECT_EQ(BCJsonValueString, array.get(0).getType());
-        EXPECT_EQ("Item1", array.get(0).getString());
-        EXPECT_EQ(BCJsonValueString, array.get(2).getType());
-        EXPECT_EQ("Item3", array.get(2).getString());
+        BCTestTools::checkString(array, 0, "Item1");
+        BCTestTools::checkString(array, 2, "Item3");
 
         BCJsonValue& value1 = array.get(1);
         EXPECT_EQ(BCJsonValueArray, value1.getType());
 
-        BCJsonArray& array1 = value1.getArray();
-        ASSERT_EQ(2, array1.size());
-        EXPECT_EQ("Item2-1", array1.get(0).getString());
-        EXPECT_EQ("Item2-2", array1.get(1).getString());
+        ASSERT_EQ(2, value1.getArray().size());
+        BCTestTools::checkString(value1, 0, "Item2-1");
+        BCTestTools::checkString(value1, 1, "Item2-2");
     }
 }
