@@ -32,6 +32,19 @@ void BCTestTools::checkString(const BlackCodex::BCJson::BCJsonValue&val, const s
     ASSERT_EQ(expected, itemValue.getString());
 }
 
+void BCTestTools::checkUnsigned(const BlackCodex::BCJson::BCJsonArray& array, size_t arrayIndex, uint64_t expected) {
+    ASSERT_LT(arrayIndex, array.size());
+
+    const BCJsonValue& itemValue = array.get(arrayIndex);
+    ASSERT_EQ(BCJsonValueNumber, itemValue.getType());
+    ASSERT_EQ(expected, itemValue.getUnsigned());
+}
+
+void BCTestTools::checkUnsigned(const BlackCodex::BCJson::BCJsonValue& val, size_t arrayIndex, uint64_t expected) {
+    ASSERT_EQ(BCJsonValueArray, val.getType());
+    checkUnsigned(val.getArray(), arrayIndex, expected);
+}
+
 void BCTestTools::checkUnsigned(const BlackCodex::BCJson::BCJsonValue&val, const std::string& key, uint64_t expected) {
     ASSERT_EQ(BCJsonValueObject, val.getType());
 

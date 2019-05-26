@@ -220,7 +220,6 @@ public:
             break;
         case MObjectValue:
             mState.top().mVal->set(mState.top().mName, val);
-            //setState(MObjectEnd);
             break;
 
         default:

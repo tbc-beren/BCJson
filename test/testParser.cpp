@@ -28,7 +28,7 @@ namespace {
         BCTestTools::checkString(root, 2, "");      // Validates root's element 2 is ""
     }
     TEST(testBCJsonParser, testParseSubArray) {
-        BCJsonParser parser(" [ \t \r\n \"v11\" \t , [ \"v21\" , \"v22\" ] , \"v12\" ] ");
+        BCJsonParser parser(" [ \t \r\n \"v11\" \t , [ \"v21\" , 12345 , \"v22\" ] , \"v12\" ] ");
         BCJsonValue root = parser.parse();
         ASSERT_EQ(BCJsonValueArray, root.getType());
         BCTestTools::checkArraySize(root, 3);
@@ -36,7 +36,8 @@ namespace {
 
         BCJsonValue& valueInner = root.getArray().get(1);
         BCTestTools::checkString(valueInner, 0, "v21");
-        BCTestTools::checkString(valueInner, 1, "v22");
+        BCTestTools::checkUnsigned(valueInner, 1, 12345);
+        BCTestTools::checkString(valueInner, 2, "v22");
 
         BCTestTools::checkString(root, 2, "v12");
     }

@@ -27,6 +27,14 @@ public:
      */
     static void checkString(const BlackCodex::BCJson::BCJsonValue& val, const std::string& key, const std::string& expected);
     /**
+     * \brief Validates the given val is an array, and a matching unsigned is contained in the value at the given index.
+     */
+    static void checkUnsigned(const BlackCodex::BCJson::BCJsonArray& array, size_t arrayIndex, uint64_t expected);
+    /**
+     * \brief Validates the given val is an object, and a matching unsigned is contained in the value at the given index.
+     */
+    static void checkUnsigned(const BlackCodex::BCJson::BCJsonValue& val, size_t arrayIndex, uint64_t expected);
+    /**
      * \brief Validates the given val is an object, and a matching unsigned is contained in the value at the given key.
      */
     static void checkUnsigned(const BlackCodex::BCJson::BCJsonValue&val, const std::string& key, uint64_t expected);
