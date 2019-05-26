@@ -3,6 +3,7 @@
 #include <BCJson/BCJsonTypes.hpp>
 
 #include <stdexcept>
+#include <string>
 
 namespace BlackCodex {
 namespace BCJson {
@@ -11,6 +12,10 @@ class BCJsonException : public std::runtime_error
 {
 public:
     BCJsonException(const char* msg)
+        : runtime_error(msg)
+    {}
+
+    BCJsonException(const std::string& msg)
         : runtime_error(msg)
     {}
 };

@@ -26,6 +26,14 @@ public:
      * \brief Validates the given val is an object, and a matching String is contained in the value at the given key.
      */
     static void checkString(const BlackCodex::BCJson::BCJsonValue& val, const std::string& key, const std::string& expected);
+    /**
+     * \brief Validates the given val is an object, and a matching unsigned is contained in the value at the given key.
+     */
+    static void checkUnsigned(const BlackCodex::BCJson::BCJsonValue&val, const std::string& key, uint64_t expected);
+    /**
+     * \brief Validates the given val is an object, and a matching signed is contained in the value at the given key.
+     */
+    static void checkSigned(const BlackCodex::BCJson::BCJsonValue&val, const std::string& key, int64_t expected);
 };
 
 } // BCJson

@@ -9,10 +9,15 @@ namespace {
 
     void assertInvalidJson(const std::string& txt);
 
-    TEST(testBCJsonParser, testParseObject) {
+    TEST(testBCJsonParser, testParseObjectString) {
         BCJsonParser parser(" { \"k\": \"val\" } ");
         BCJsonValue root = parser.parse();
         BCTestTools::checkString(root, "k", "val");
+    }
+    TEST(testBCJsonParser, testParseObjectInteger) {
+        BCJsonParser parser(" { \"int\": 65535 } ");
+        BCJsonValue root = parser.parse();
+        BCTestTools::checkUnsigned(root, "int", 65535);
     }
     TEST(testBCJsonParser, testParseArray) {
         BCJsonParser parser(" \n \r \n \t  [ \"Str1\", \"Str2\" , \"\" ]  ");

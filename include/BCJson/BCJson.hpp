@@ -72,6 +72,24 @@ public:
         mMembers[key] = BCJsonValue(value);
         return mMembers[key];
     }
+    /*
+    template<typename T> BCJsonValue& set(const std::string& key, const BCJsonValue& value) {
+        setType(BCJsonValueObject);
+        mMembers[key] = value;
+        return mMembers[key];
+    }*/
+    void set(double f) {
+        mType = BCJsonValueFloat;
+        mValFloat = f;
+    }
+    void set(uint64_t u) {
+        mType = BCJsonValueNumber;
+        mValUnsigned = u;
+    }
+    void set(int64_t n) {
+        mType = BCJsonValueNumber;
+        mValSigned = n;
+    }
     BCJsonValue& get(const std::string& key) {
         return mMembers[key];
     }

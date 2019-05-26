@@ -8,6 +8,23 @@
 namespace BlackCodex {
 namespace BCJson {
 
+class BCJsonParserException : public BCJsonException {
+    int mLine;
+    int mColumn;
+public:
+    BCJsonParserException(const char* message, int line = 0, int column = 0)
+        : BCJsonException(message)
+        , mLine(line)
+        , mColumn(column)
+    {}
+
+    BCJsonParserException(const std::string& message, int line = 0, int column = 0)
+        : BCJsonException(message)
+        , mLine(line)
+        , mColumn(column)
+    {}
+};
+
 class BCJsonParser
 {
     enum MODE {
@@ -65,6 +82,13 @@ public:
 
             char chr = *mPos;
             MODE cMode = mState.top().mMode;
+
+            if (isNumber(chr) || isMinus(chr)) {
+                parseNumber();
+                advance();
+                continue;
+            }
+
             switch (chr) {
             case '{':
                 pushState(BCJsonValueObject, MObjectName);
@@ -133,7 +157,7 @@ public:
             }
             break;
             default:
-                throw std::runtime_error("invalid state");
+                throw BCJsonParserException(std::string("invalid state: unexpected ")+chr);
             }
 
             advance();
@@ -160,8 +184,55 @@ public:
         return std::string();
     }
 
+    void parseNumber() {
+        bool isSigned = (*mPos == '-');
+        bool isFloat = false;
+        const char* str = mPos;
+
+        if (isSigned) {
+            mPos++;
+        }
+
+        while (isNumber(*mPos) || *mPos=='e' || *mPos=='E' || *mPos=='.') {
+            if (*mPos=='.') {
+                if (isFloat) {
+                    throwParseException('.');
+                }
+                isFloat = true;
+            }
+            mPos++;
+        }
+
+        BCJsonValue val;
+        if (isFloat) {
+            val.set(atof(str));
+        } else if (isSigned) {
+            val.set((int64_t)atoi(str));
+        } else {
+            val.set((uint64_t)atoi(str));
+        }
+
+        MODE cMode = mState.top().mMode;
+        switch (cMode)
+        {
+        case MArray:
+            mState.top().mVal->getArray().add(val);
+            break;
+        case MObjectValue:
+            mState.top().mVal->set(mState.top().mName, val);
+            //setState(MObjectEnd);
+            break;
+
+        default:
+            throwParseException("invalid state");
+        }
+    }
+
     static bool isMinus(char chr) {
         return chr == '-';
+    }
+    static bool isNumber(char chr) {
+        return '0' <= chr && '9' >= chr;
     }
     static bool isWhitespace(char chr) {
         return chr == ' ' || chr == '\t' || chr == '\n' || chr == '\r';
@@ -235,7 +306,13 @@ private:
     }
 
     void throwParseException() {
-        throw BCJsonException("parse error");
+        throwParseException("parse error");
+    }
+    void throwParseException(char chr) {
+        throwParseException(std::string("unexpected char ")+chr);
+    }
+    void throwParseException(const std::string& message) {
+        throw BCJsonException(message);
     }
 };
 
