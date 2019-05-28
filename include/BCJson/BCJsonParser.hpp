@@ -94,6 +94,9 @@ public:
                 pushState(BCJsonValueObject, MObjectName);
                 break;
             case '}':
+                if ( cMode != MObjectEnd ) {
+                    throwParseException('}');
+                }
                 advanceChar();
                 mState.pop();
                 setState(MObjectEnd);
@@ -122,6 +125,7 @@ public:
                         break;
                     case MObjectValue:
                         mState.top().mVal->set(mState.top().mName, str);
+                        setState(MObjectEnd);
                         break;
 
                     default:
@@ -134,6 +138,7 @@ public:
                     switch (mState.top().mMode)
                     {
                     case MObjectEnd:
+                        setState(MObjectName);
                     case MArray:
                         advanceChar();
                         break;
@@ -220,6 +225,7 @@ public:
             break;
         case MObjectValue:
             mState.top().mVal->set(mState.top().mName, val);
+            setState(MObjectEnd);
             break;
 
         default:

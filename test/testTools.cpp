@@ -4,8 +4,6 @@
 namespace BlackCodex {
 namespace BCJson {
 
-using namespace BlackCodex::BCJson;
-
 void BCTestTools::checkArraySize(const BlackCodex::BCJson::BCJsonValue& value, size_t expectedSize) {
     ASSERT_EQ(BCJsonValueArray, value.getType());
     ASSERT_EQ(expectedSize, value.getArray().size());
