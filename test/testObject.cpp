@@ -27,7 +27,7 @@ namespace {
         EXPECT_EQ(BCJsonValueFloat, object.get("kDouble").getType());
         EXPECT_EQ(E, object.get("kDouble").getDouble());
         EXPECT_EQ(BCJsonValueNumber, object.get("kChar").getType());
-        EXPECT_EQ(PERFECT_POWER, object.get("kChar").getNumber());
+        EXPECT_EQ(PERFECT_POWER, object.get("kChar").getUnsigned());
         EXPECT_EQ(BCJsonValueNumber, object.get("kUint").getType());
         EXPECT_EQ(HUNDRED, object.get("kUint").getNumber());
     }

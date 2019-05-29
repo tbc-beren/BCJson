@@ -9,7 +9,7 @@ namespace {
 
     TEST(testBCJsonArray, EmptyArray) {
         BCJsonArray array;
-        EXPECT_EQ(0, array.size());
+        EXPECT_EQ(0UL, array.size());
     }
     TEST(testBCJsonArray, BasicFunctionality) {
         static const float PI = 3.14159f;
@@ -24,14 +24,14 @@ namespace {
         array.add(PERFECT_POWER);
         array.add(HUNDRED);
 
-        ASSERT_EQ(5, array.size());
+        ASSERT_EQ(5UL, array.size());
         BCTestTools::checkString(array, 0, "ItemString");
         EXPECT_EQ(BCJsonValueFloat, array.get(1).getType());
         EXPECT_EQ(PI, array.get(1).getDouble());
         EXPECT_EQ(BCJsonValueFloat, array.get(2).getType());
         EXPECT_EQ(E, array.get(2).getDouble());
         EXPECT_EQ(BCJsonValueNumber, array.get(3).getType());
-        EXPECT_EQ(PERFECT_POWER, array.get(3).getNumber());
+        EXPECT_EQ(PERFECT_POWER, array.get(3).getUnsigned());
         EXPECT_EQ(BCJsonValueNumber, array.get(4).getType());
         EXPECT_EQ(HUNDRED, array.get(4).getNumber());
     }
@@ -48,14 +48,14 @@ namespace {
             arrayEntry1.add(std::string("Item2-2"));
         }
 
-        ASSERT_EQ(3, array.size());
+        ASSERT_EQ(3UL, array.size());
         BCTestTools::checkString(array, 0, "Item1");
         BCTestTools::checkString(array, 2, "Item3");
 
         BCJsonValue& value1 = array.get(1);
         EXPECT_EQ(BCJsonValueArray, value1.getType());
 
-        ASSERT_EQ(2, value1.getArray().size());
+        ASSERT_EQ(2UL, value1.getArray().size());
         BCTestTools::checkString(value1, 0, "Item2-1");
         BCTestTools::checkString(value1, 1, "Item2-2");
     }
