@@ -118,7 +118,7 @@ public:
     }
     BCJsonArray& getArray() {
         if (BCJsonValueArray == getType() && nullptr == mArr) {
-            mArr = std::make_unique<BCJsonArray>();
+            mArr = std::make_shared<BCJsonArray>();
         }
         return *mArr;
     }
