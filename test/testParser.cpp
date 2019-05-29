@@ -19,6 +19,33 @@ namespace {
         BCJsonValue root = parser.parse();
         BCTestTools::checkUnsigned(root, "int", 65535);
     }
+    TEST(testBCJsonParser, testParseSubObject) {
+        BCJsonParser parser(" { \"k\": { \"k2\":\"val\" } } ");
+        BCJsonValue root = parser.parse();
+
+        ASSERT_EQ(BCJsonValueObject, root.getType());
+
+        BCJsonValue& innerK = root.get("k");
+        assert(BCJsonValueObject == innerK.getType());
+        BCTestTools::checkString(innerK, "k2", "val");  // Validates root's element "k2" is "val"
+    }
+    TEST(testBCJsonParser, testParseArrayComplex) {
+        BCJsonParser parser(" [ \"str\" , 65535 , { \"key\": 2 } , [ 1 , 2 , 3 ] ] ");
+        BCJsonValue root = parser.parse();
+        BCTestTools::checkArraySize(root, 4);           // Validates root is an array containing 4 elements
+        BCTestTools::checkString(root, 0, "str");       // Validates root's element 0 is "Str1"
+        BCTestTools::checkUnsigned(root, 1, 65535);     // Validates root's element 1 is 65535
+
+        BCJsonValue& item2 = root.getArray().get(2);
+        ASSERT_EQ(BCJsonValueObject, item2.getType());  // Item2 is an Object
+        BCTestTools::checkUnsigned(item2, "key", 2);    // Validates root's element "key" is 2
+
+        BCJsonValue& item3 = root.getArray().get(3);
+        ASSERT_EQ(BCJsonValueArray, item3.getType());   // Item3 is an Array
+        BCTestTools::checkUnsigned(item3, 0, 1);        // Validates item's element 0 is 1
+        BCTestTools::checkUnsigned(item3, 1, 2);        // Validates item's element 1 is 2
+        BCTestTools::checkUnsigned(item3, 2, 3);        // Validates item's element 2 is 3
+    }
     TEST(testBCJsonParser, testParseArray) {
         BCJsonParser parser(" \n \r \n \t  [ \"Str1\", \"Str2\" , \"\" ]  ");
         BCJsonValue root = parser.parse();

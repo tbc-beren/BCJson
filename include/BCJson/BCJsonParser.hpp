@@ -91,6 +91,12 @@ public:
 
             switch (chr) {
             case '{':
+                if (cMode != MObjectValue && cMode != MScan && MArray != cMode) {
+                    throwParseException("invalid state");
+                }
+                if (cMode != MArray) {
+                    setState(MObjectEnd);
+                }
                 pushState(BCJsonValueObject, MObjectName);
                 break;
             case '}':
@@ -99,14 +105,13 @@ public:
                 }
                 advanceChar();
                 mState.pop();
-                setState(MObjectEnd);
                 break;
             case '[':
                 pushState(BCJsonValueArray, MArray);
                 break;
             case ']':
-                if (mState.top().mMode != MArray) {
-                    throw std::runtime_error("invalid state");
+                if (cMode != MArray) {
+                    throwParseException("invalid state");
                 }
                 mState.pop();
                 advanceChar();
