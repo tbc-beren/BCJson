@@ -31,4 +31,18 @@ namespace {
         EXPECT_EQ(BCJsonValueNumber, object.get("kUint").getType());
         EXPECT_EQ(HUNDRED, object.get("kUint").getNumber());
     }
+    TEST(testBCJsonObject, keyDoesNotExist) {
+        BCJsonValue object;
+        object.set("key", "SomeString");
+        BCTestTools::checkString(object, "key", "SomeString");
+
+        bool thrown = false;
+        try {
+            const BCJsonValue& val = object.getString("KeyNotFound");
+        } catch (const BCJsonInvalidKeyException& e) {
+            thrown = true;
+            ASSERT_EQ("KeyNotFound", e.getKey());
+        }
+        EXPECT_TRUE(thrown);
+    }
 }

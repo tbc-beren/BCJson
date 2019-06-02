@@ -1,3 +1,9 @@
+#
+# cmake .. -DBCJSON_TESTCOVERAGE=1
+#             lcov -t "result" -o coverage.info -c -d .
+#             genhtml -o cov-results coverage.info
+# cmake .. -DCMAKE_BUILD_TYPE=Debug
+#
 cmake_minimum_required (VERSION 3.8)
 
 set (CMAKE_CXX_STANDARD 11)
@@ -43,6 +49,11 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
+
+# Set coverage options when needed
+if (DEFINED BCJSON_TESTCOVERAGE)
+set(COVERAGE_OPTIONS "--coverage")
+endif (DEFINED BCJSON_TESTCOVERAGE)
 
 enable_testing()
 add_executable(
