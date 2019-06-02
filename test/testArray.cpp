@@ -6,10 +6,9 @@
 
 namespace {
     using namespace BlackCodex::BCJson;
-
     TEST(testBCJsonArray, EmptyArray) {
-        BCJsonArray array;
-        EXPECT_EQ(0UL, array.size());
+        BCJsonValue array(BCJsonValueArray);
+        EXPECT_EQ(0UL, array.getSize());
     }
     TEST(testBCJsonArray, BasicFunctionality) {
         static const float PI = 3.14159f;
@@ -17,14 +16,14 @@ namespace {
         static const char HUNDRED = 100;
         static const uint64_t PERFECT_POWER = 9814072356;
 
-        BCJsonArray array;
+        BCJsonValue array;
         array.add("ItemString");
         array.add(PI);
         array.add(E);
         array.add(PERFECT_POWER);
         array.add(HUNDRED);
 
-        ASSERT_EQ(5UL, array.size());
+        ASSERT_EQ(5UL, array.getSize());
         BCTestTools::checkString(array, 0, "ItemString");
         EXPECT_EQ(BCJsonValueFloat, array.get(1).getType());
         EXPECT_EQ(PI, array.get(1).getDouble());
@@ -36,26 +35,25 @@ namespace {
         EXPECT_EQ(HUNDRED, array.get(4).getNumber());
     }
     TEST(testBCJsonArray, SubArray) {
-        BCJsonArray array;
+        BCJsonValue array;
         array.add("Item1");
         array.add(BCJsonValueArray);
         array.add("Item3");
 
         {
             BCJsonValue& valueEntry1 = array.get(1);
-            BCJsonArray& arrayEntry1 = valueEntry1.getArray();
-            arrayEntry1.add(std::string("Item2-1"));
-            arrayEntry1.add(std::string("Item2-2"));
+            valueEntry1.add(std::string("Item2-1"));
+            valueEntry1.add(std::string("Item2-2"));
         }
 
-        ASSERT_EQ(3UL, array.size());
+        ASSERT_EQ(3UL, array.getSize());
         BCTestTools::checkString(array, 0, "Item1");
         BCTestTools::checkString(array, 2, "Item3");
 
         BCJsonValue& value1 = array.get(1);
         EXPECT_EQ(BCJsonValueArray, value1.getType());
 
-        ASSERT_EQ(2UL, value1.getArray().size());
+        ASSERT_EQ(2UL, value1.getSize());
         BCTestTools::checkString(value1, 0, "Item2-1");
         BCTestTools::checkString(value1, 1, "Item2-2");
     }

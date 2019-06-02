@@ -122,7 +122,7 @@ public:
                     switch (cMode)
                     {
                     case MArray:
-                        mState.top().mVal->getArray().add(str);
+                        mState.top().mVal->add(str);
                         break;
                     case MObjectName:
                         mState.top().mName = str;
@@ -226,7 +226,7 @@ public:
         switch (cMode)
         {
         case MArray:
-            mState.top().mVal->getArray().add(val);
+            mState.top().mVal->add(val);
             break;
         case MObjectValue:
             mState.top().mVal->set(mState.top().mName, val);
@@ -266,7 +266,7 @@ private:
             case '\"':
             {
                 std::string str = parseString();
-                cur.getArray().add(str);
+                cur.add(str);
             }
             break;
             default:
@@ -299,7 +299,7 @@ private:
         if (BCJsonValueNull == cType) {
             mState.top().mVal->setType(type);
         } else if ( BCJsonValueArray == cType ) {
-            BCJsonValue& r = newVal->getArray().add(BCJsonValueNull);
+            BCJsonValue& r = newVal->add(BCJsonValueNull);
             newVal = &r;
         }  else if (BCJsonValueObject == cType) {
             BCJsonValue& r = newVal->set(mState.top().mName, BCJsonValue());

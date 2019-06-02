@@ -36,11 +36,11 @@ namespace {
         BCTestTools::checkString(root, 0, "str");       // Validates root's element 0 is "Str1"
         BCTestTools::checkUnsigned(root, 1, 65535);     // Validates root's element 1 is 65535
 
-        BCJsonValue& item2 = root.getArray().get(2);
+        BCJsonValue& item2 = root.get(2);
         ASSERT_EQ(BCJsonValueObject, item2.getType());  // Item2 is an Object
         BCTestTools::checkUnsigned(item2, "key", 2);    // Validates root's element "key" is 2
 
-        BCJsonValue& item3 = root.getArray().get(3);
+        BCJsonValue& item3 = root.get(3);
         ASSERT_EQ(BCJsonValueArray, item3.getType());   // Item3 is an Array
         BCTestTools::checkUnsigned(item3, 0, 1);        // Validates item's element 0 is 1
         BCTestTools::checkUnsigned(item3, 1, 2);        // Validates item's element 1 is 2
@@ -61,7 +61,7 @@ namespace {
         BCTestTools::checkArraySize(root, 3);
         BCTestTools::checkString(root, 0, "v11");
 
-        BCJsonValue& valueInner = root.getArray().get(1);
+        BCJsonValue& valueInner = root.get(1);
         BCTestTools::checkString(valueInner, 0, "v21");
         BCTestTools::checkUnsigned(valueInner, 1, 12345);
         BCTestTools::checkString(valueInner, 2, "v22");
