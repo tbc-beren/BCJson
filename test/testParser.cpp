@@ -46,6 +46,14 @@ namespace {
         BCTestTools::checkUnsigned(item3, 1, 2);        // Validates item's element 1 is 2
         BCTestTools::checkUnsigned(item3, 2, 3);        // Validates item's element 2 is 3
     }
+    TEST(testBCJsonParser, testParseArrayEnding) {
+        BCJsonParser parser(" { \"arr\" : [ 0 , 1 ] , \"k\": \"val\" } ");
+        BCJsonValue root = parser.parse();
+        BCTestTools::checkArraySize(root.get("arr"), 2);
+        BCTestTools::checkUnsigned(root.get("arr"), 0, 0);
+        BCTestTools::checkUnsigned(root.get("arr"), 1, 1);
+        BCTestTools::checkString(root, "k", "val");
+    }
     TEST(testBCJsonParser, testParseArray) {
         BCJsonParser parser(" \n \r \n \t  [ \"Str1\", \"Str2\" , \"\" ]  ");
         BCJsonValue root = parser.parse();

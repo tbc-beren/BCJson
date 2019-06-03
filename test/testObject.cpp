@@ -39,6 +39,7 @@ namespace {
         bool thrown = false;
         try {
             const BCJsonValue& val = object.getString("KeyNotFound");
+            ASSERT_EQ(BCJsonValueNull, val.getType());
         } catch (const BCJsonInvalidKeyException& e) {
             thrown = true;
             ASSERT_EQ("KeyNotFound", e.getKey());

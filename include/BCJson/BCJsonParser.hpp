@@ -53,8 +53,6 @@ class BCJsonParser
     const char* mPos;
     std::stack<PState> mState;
 
-    //std::vector<PError> mErrorList;
-
 public:
     BCJsonParser(const char* const str)
         : mStart(str)
@@ -107,6 +105,9 @@ public:
                 mState.pop();
                 break;
             case '[':
+                if (MObjectValue== cMode) {
+                    setState(MObjectEnd);
+                }
                 pushState(BCJsonValueArray, MArray);
                 break;
             case ']':
