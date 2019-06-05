@@ -178,19 +178,40 @@ public:
 
     std::string parseString() {
         if (*mPos == '\"') {
-            mPos++;
+            advanceChar();
 
             auto start = mPos;
-            while (*mPos != '\"') {
-                if (!isAllowedInString(*mPos)) {
-                    throwParseException();
-                    break;
+            size_t replacements = 0;
+            char chr;
+            while ('\"' != (chr = *mPos)) {
+                if (isEscapeSequence(chr)) {
+                    replacements++;
+                    advanceChar();
+                } else if (!isAllowedInString(chr)) {
+                    throwParseException(chr);
                 }
                 advanceChar();
             }
 
-            mPos++;
-            return std::string(start, mPos - 1 - start);
+            advanceChar();
+
+            std::string ret;
+            ret.resize(mPos - 1 - start - replacements);
+            char* tgt = &(ret[0]);
+            while (mPos > start+1) {
+                chr = *start;
+                if (isEscapeSequence(chr)) {
+                    start++;
+                    chr = *start;
+                    *tgt = replaceStringChar(*start);
+                } else if (start != tgt) {
+                    *tgt = *start;
+                }
+
+                tgt++;
+                start++;
+            }
+            return ret;
         }
         return std::string();
     }
@@ -237,6 +258,9 @@ public:
         default:
             throwParseException("invalid state");
         }
+    }
+    static bool isEscapeSequence(char chr) {
+        return chr == '\\';
     }
     static bool isMinus(char chr) {
         return chr == '-';
@@ -287,7 +311,19 @@ private:
             throwParseException();
         }
     }
-
+    static char replaceStringChar(char src) {
+        static const char table[] = "\"nr\\tfb";
+        static const char tablr[] = "\"\n\r\\\t\f\b";
+        int idx = 0;
+        char chr;
+        while (0 != (chr = table[idx])) {
+            if (src == chr) {
+                return tablr[idx];
+            }
+            idx++;
+        }
+        return 0;
+    }
     void pushState(BCJsonValueType type, MODE mode) {
         BCJsonValue* newVal = mState.top().mVal;
 

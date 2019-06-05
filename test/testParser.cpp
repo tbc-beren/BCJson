@@ -14,6 +14,19 @@ namespace {
         BCJsonValue root = parser.parse();
         BCTestTools::checkString(root, "k", "val");
     }
+    TEST(testBCJsonParser, testParseStringEscaped) {
+        BCJsonParser parser(" [ \"\\r\", \"\\n\",\"\\t\", \"\\b\", \"\\f\" , \"\\\\\", \"\\\"\"] ");
+        BCJsonValue root = parser.parse();
+        assert(BCJsonValueArray == root.getType());
+        BCTestTools::checkArraySize(root, 7);
+        BCTestTools::checkString(root, 0, "\r");
+        BCTestTools::checkString(root, 1, "\n");
+        BCTestTools::checkString(root, 2, "\t");
+        BCTestTools::checkString(root, 3, "\b");
+        BCTestTools::checkString(root, 4, "\f");
+        BCTestTools::checkString(root, 5, "\\");
+        BCTestTools::checkString(root, 6, "\"");
+    }
     TEST(testBCJsonParser, testParseObjectInteger) {
         BCJsonParser parser(" { \"int\": 65535 } ");
         BCJsonValue root = parser.parse();
