@@ -201,7 +201,7 @@ public:
         const char* str = mPos;
 
         if (isSigned) {
-            mPos++;
+            advanceChar();
         }
 
         while (isNumber(*mPos) || *mPos=='e' || *mPos=='E' || *mPos=='.') {
@@ -211,7 +211,7 @@ public:
                 }
                 isFloat = true;
             }
-            mPos++;
+            advanceChar();
         }
 
         BCJsonValue val;
@@ -238,7 +238,6 @@ public:
             throwParseException("invalid state");
         }
     }
-
     static bool isMinus(char chr) {
         return chr == '-';
     }
@@ -256,7 +255,6 @@ private:
     void advanceChar() {
         mPos++;
     }
-
     void parseArray(BCJsonValue& cur) {
         char chr;
         do {
