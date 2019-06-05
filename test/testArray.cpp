@@ -23,7 +23,11 @@ namespace {
         array.add(PERFECT_POWER);
         array.add(HUNDRED);
 
+        ASSERT_EQ(BCJsonValueArray, array.getType());
         ASSERT_EQ(5UL, array.getSize());
+        ASSERT_TRUE(array.has(4));
+        ASSERT_FALSE(array.has(5));
+
         BCTestTools::checkString(array, 0, "ItemString");
         EXPECT_EQ(BCJsonValueFloat, array.get(1).getType());
         EXPECT_EQ(PI, array.get(1).getDouble());

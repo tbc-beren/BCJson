@@ -71,6 +71,13 @@ public:
             throw BCJsonInvalidTypeException(mType);
         }
     }
+    bool has(size_t index) const {
+        return getSize() > index;
+    }
+    bool has(const std::string& key) const {
+        assertType(BCJsonValueObject, false);
+        return mMembers.end() != mMembers.find(key);
+    }
     void setType(BCJsonValueType type) {
         assertType(type, true);
         mType = type;

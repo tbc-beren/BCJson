@@ -20,7 +20,10 @@ namespace {
         object.set("kChar", PERFECT_POWER);
         object.set("kUint", HUNDRED);
 
-        //ASSERT_EQ(5, object.size());
+        EXPECT_EQ(BCJsonValueObject, object.getType());
+        ASSERT_TRUE(object.has("kStr"));
+        ASSERT_FALSE(object.has("noFIeld"));
+
         BCTestTools::checkString(object, "kStr", "ItemString");
         EXPECT_EQ(BCJsonValueFloat, object.get("kFloat").getType());
         EXPECT_EQ(PI, object.get("kFloat").getDouble());
