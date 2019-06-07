@@ -95,6 +95,8 @@ public:
                 parseNumber();
                 advance();
                 continue;
+            } else if(parseBool()) {
+                continue;
             }
 
             switch (chr) {
@@ -226,6 +228,39 @@ public:
         return std::string();
     }
 
+    bool parseBool() {
+        bool isValidBool = false;
+        BCJsonValue val;
+        if (strncmp(mPos, "true", 4)==0) {
+            val.setType(BCJsonValueTrue);
+            isValidBool = true;
+            mPos+=4;
+        } else if (strncmp(mPos, "false", 5)==0) {
+            val.setType(BCJsonValueFalse);
+            isValidBool = true;
+            mPos+=5;
+        }
+
+        if (isValidBool) {
+            MODE cMode = mState.top().mMode;
+            switch (cMode)
+            {
+            case MArray:
+                mState.top().mVal->add(val);
+                break;
+            case MObjectValue:
+                mState.top().mVal->set(mState.top().mName, val);
+                setState(MObjectEnd);
+                break;
+
+            default:
+                throwParseException("invalid state");
+            }
+            advance();
+        }
+
+        return isValidBool;
+    }
     void parseNumber() {
         bool isSigned = (*mPos == '-');
         bool isFloat = false;

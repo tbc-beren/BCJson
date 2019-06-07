@@ -89,6 +89,14 @@ namespace {
 
         BCTestTools::checkString(root, 2, "v12");
     }
+    TEST(testBCJsonParser, testParseArrayBool) {
+        BCJsonParser parser(" [ true , false ] ");
+        BCJsonValue root = parser.parse();
+        BCTestTools::checkArraySize(root, 2);
+        ASSERT_TRUE(root.getBool(0));
+        ASSERT_FALSE(root.getBool(1));
+
+    }
     TEST(testBCJsonParser, testInvalidJson) {
         // Invalid here ------------v
         assertInvalidJson(" { \"k\":: \"val\" } ");

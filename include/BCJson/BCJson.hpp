@@ -44,6 +44,10 @@ public:
         : mType(BCJsonValueString)
         , mValString(str)
         {}
+    BCJsonValue(const char* str)
+        : mType(BCJsonValueString)
+        , mValString(str)
+        {}
     BCJsonValue(float f)
         : mType(BCJsonValueFloat)
         , mValFloat(f)
@@ -52,6 +56,9 @@ public:
         : mType(BCJsonValueFloat)
         , mValFloat(f)
         {}
+    BCJsonValue(bool b)
+        : mType(b?BCJsonValueTrue:BCJsonValueFalse)
+    {}
     BCJsonValue(int i)
         : mType(BCJsonValueNumber)
         , mValUnsigned(i)
@@ -143,6 +150,20 @@ public:
     }
     const std::string& getString(const std::string& key) const {
         return get(key).getString();
+    }
+    bool getBool() const {
+        switch (mType) {
+        case BCJsonValueTrue:   return true;
+        case BCJsonValueFalse:  return false;
+        default:
+            throw BCJsonInvalidTypeException(mType);
+        }
+    }
+    bool getBool(size_t index) const {
+        return get(index).getBool();
+    }
+    bool getBool(const std::string& key) const {
+        return get(key).getBool();
     }
     double getDouble() const {
         return mValFloat;
