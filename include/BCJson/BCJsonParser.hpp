@@ -110,11 +110,13 @@ public:
                 pushState(BCJsonValueObject, MObjectName);
                 break;
             case '}':
-                if ( cMode != MObjectEnd ) {
+                if ((cMode == MObjectName && mState.top().mVal->isEmpty()) ||
+                     cMode == MObjectEnd) {
+                    advanceChar();
+                    mState.pop();
+                } else {
                     throwParseException('}');
                 }
-                advanceChar();
-                mState.pop();
                 break;
             case '[':
                 if (MObjectValue== cMode) {

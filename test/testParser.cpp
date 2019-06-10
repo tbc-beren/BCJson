@@ -9,6 +9,11 @@ namespace {
 
     void assertInvalidJson(const std::string& txt);
 
+    TEST(testBCJsonParser, testParseObjectEmpty) {
+        BCJsonParser parser(" { } ");
+        BCJsonValue root = parser.parse();
+        ASSERT_EQ(BCJsonValueObject, root.getType());
+    }
     TEST(testBCJsonParser, testParseObjectString) {
         BCJsonParser parser(" { \"k\": \"val\" } ");
         BCJsonValue root = parser.parse();
@@ -39,7 +44,7 @@ namespace {
         ASSERT_EQ(BCJsonValueObject, root.getType());
 
         BCJsonValue& innerK = root.get("k");
-        assert(BCJsonValueObject == innerK.getType());
+        ASSERT_EQ(BCJsonValueObject, innerK.getType());
         BCTestTools::checkString(innerK, "k2", "val");  // Validates root's element "k2" is "val"
     }
     TEST(testBCJsonParser, testParseArrayComplex) {

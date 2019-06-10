@@ -78,6 +78,11 @@ public:
             throw BCJsonInvalidTypeException(mType);
         }
     }
+    bool isEmpty()  const {
+        return   BCJsonValueNull   == mType ||
+                (BCJsonValueObject == mType && mMembers.empty()) ||
+                (BCJsonValueArray  == mType && mArr.empty());
+    }
     bool has(size_t index) const {
         return getSize() > index;
     }
