@@ -13,6 +13,7 @@ namespace {
         BCJsonParser parser(" { } ");
         BCJsonValue root = parser.parse();
         ASSERT_EQ(BCJsonValueObject, root.getType());
+        ASSERT_TRUE(root.isEmpty());
     }
     TEST(testBCJsonParser, testParseObjectString) {
         BCJsonParser parser(" { \"k\": \"val\" } ");
@@ -46,6 +47,13 @@ namespace {
         BCJsonValue& innerK = root.get("k");
         ASSERT_EQ(BCJsonValueObject, innerK.getType());
         BCTestTools::checkString(innerK, "k2", "val");  // Validates root's element "k2" is "val"
+    }
+    TEST(testBCJsonParser, testParseArrayEmpty) {
+        BCJsonParser parser(" [ ] ");
+        BCJsonValue root = parser.parse();
+        ASSERT_EQ(BCJsonValueArray, root.getType());
+        ASSERT_TRUE(root.isEmpty());
+        BCTestTools::checkArraySize(root, 0);
     }
     TEST(testBCJsonParser, testParseArrayComplex) {
         BCJsonParser parser(" [ \"str\" , 65535 , { \"key\": 2 } , [ 1 , 2 , 3 ] ] ");
