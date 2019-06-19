@@ -67,6 +67,7 @@ add_executable(
     test/testObject.cpp
     test/testArray.cpp
     test/testParser.cpp
+    test/testWriter.cpp
     )
 target_link_libraries(BCJsonTest gtest_main)
 target_link_libraries(BCJsonTest BCJson)

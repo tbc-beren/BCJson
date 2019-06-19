@@ -33,6 +33,66 @@ private:
         int64_t     mValSigned;
         double      mValFloat;
     };
+
+public:
+    class iterator
+    {
+        BCJsonValue& mParent;
+        std::map<std::string, BCJsonValue>::iterator mItMembers;
+        std::vector<BCJsonValue>::iterator mItArr;
+
+        void _seekBegin() {
+            switch (mParent.getType()) {
+            case BCJsonValueArray:      mItArr      = mParent.mArr.begin();     break;
+            case BCJsonValueObject:     mItMembers  = mParent.mMembers.begin(); break;
+            default:
+                throw BCJsonInvalidTypeException(mParent.getType());
+            }
+        }
+    public:
+        iterator(BCJsonValue& parent)
+            : mParent(parent)
+            , mItMembers(parent.mMembers.end())
+            , mItArr(parent.mArr.end())
+        {}
+        std::string getKey() const {
+            switch (mParent.getType()) {
+            case BCJsonValueObject:     return mItMembers->first;
+            default:
+                throw BCJsonInvalidTypeException(mParent.getType());
+            }
+        }
+        BCJsonValue& getValue() const {
+            switch (mParent.getType()) {
+            case BCJsonValueObject:     return mItMembers->second;
+            default:
+                throw BCJsonInvalidTypeException(mParent.getType());
+            }
+        }
+        static iterator begin(BCJsonValue& parent) {
+            iterator it = iterator(parent);
+            it._seekBegin();
+            return it;
+        }
+        void operator++() {
+            switch (mParent.getType()) {
+            case BCJsonValueArray:  mItArr++;       break;
+            case BCJsonValueObject: mItMembers++;   break;
+            default:
+                throw BCJsonInvalidTypeException(mParent.getType());
+            }
+        }
+        bool operator==(const iterator& it) {
+            return  it.mParent.getType() != this->mParent.getType() &&
+                    it.mItArr == this->mItArr &&
+                    it.mItMembers == this->mItMembers;
+        }
+        bool operator!=(const iterator& it) {
+            return  it.mParent.getType() != this->mParent.getType() ||
+                    it.mItArr != this->mItArr ||
+                    it.mItMembers != this->mItMembers;
+        }
+    };
 public:
     BCJsonValue()
         : mType(BCJsonValueNull)
@@ -72,6 +132,12 @@ public:
         , mValUnsigned(i)
         {}
 
+    iterator begin() {
+        return iterator::begin(*this);
+    }
+    iterator end() {
+        return iterator(*this);
+    }
     void assertType(BCJsonValueType type, bool nullIsValid = true) const {
         if(( !nullIsValid && (BCJsonValueNull == mType || BCJsonValueNull == type)) ||
            ( type != mType && BCJsonValueNull != mType) ) {
