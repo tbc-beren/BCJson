@@ -24,8 +24,10 @@ namespace BCJson {
 class BCJsonValue
 {
 private:
+    typedef std::map<std::string, BCJsonValue> member_list_t;
+
     BCJsonValueType mType;
-    std::map<std::string, BCJsonValue> mMembers;
+    member_list_t mMembers;
     std::vector<BCJsonValue> mArr;
     std::string mValString;
     union {
@@ -35,64 +37,9 @@ private:
     };
 
 public:
-    class iterator
-    {
-        BCJsonValue& mParent;
-        std::map<std::string, BCJsonValue>::iterator mItMembers;
-        std::vector<BCJsonValue>::iterator mItArr;
+    typedef member_list_t::iterator iterator;
+    typedef member_list_t::const_iterator const_iterator;
 
-        void _seekBegin() {
-            switch (mParent.getType()) {
-            case BCJsonValueArray:      mItArr      = mParent.mArr.begin();     break;
-            case BCJsonValueObject:     mItMembers  = mParent.mMembers.begin(); break;
-            default:
-                throw BCJsonInvalidTypeException(mParent.getType());
-            }
-        }
-    public:
-        iterator(BCJsonValue& parent)
-            : mParent(parent)
-            , mItMembers(parent.mMembers.end())
-            , mItArr(parent.mArr.end())
-        {}
-        std::string getKey() const {
-            switch (mParent.getType()) {
-            case BCJsonValueObject:     return mItMembers->first;
-            default:
-                throw BCJsonInvalidTypeException(mParent.getType());
-            }
-        }
-        BCJsonValue& getValue() const {
-            switch (mParent.getType()) {
-            case BCJsonValueObject:     return mItMembers->second;
-            default:
-                throw BCJsonInvalidTypeException(mParent.getType());
-            }
-        }
-        static iterator begin(BCJsonValue& parent) {
-            iterator it = iterator(parent);
-            it._seekBegin();
-            return it;
-        }
-        void operator++() {
-            switch (mParent.getType()) {
-            case BCJsonValueArray:  mItArr++;       break;
-            case BCJsonValueObject: mItMembers++;   break;
-            default:
-                throw BCJsonInvalidTypeException(mParent.getType());
-            }
-        }
-        bool operator==(const iterator& it) {
-            return  it.mParent.getType() != this->mParent.getType() &&
-                    it.mItArr == this->mItArr &&
-                    it.mItMembers == this->mItMembers;
-        }
-        bool operator!=(const iterator& it) {
-            return  it.mParent.getType() != this->mParent.getType() ||
-                    it.mItArr != this->mItArr ||
-                    it.mItMembers != this->mItMembers;
-        }
-    };
 public:
     BCJsonValue()
         : mType(BCJsonValueNull)
@@ -133,10 +80,20 @@ public:
         {}
 
     iterator begin() {
-        return iterator::begin(*this);
+        assertType(BCJsonValueObject, false);
+        return mMembers.begin();
     }
     iterator end() {
-        return iterator(*this);
+        assertType(BCJsonValueObject, false);
+        return mMembers.end();
+    }
+    const_iterator begin() const {
+        assertType(BCJsonValueObject, false);
+        return mMembers.begin();
+    }
+    const_iterator end() const {
+        assertType(BCJsonValueObject, false);
+        return mMembers.end();
     }
     void assertType(BCJsonValueType type, bool nullIsValid = true) const {
         if(( !nullIsValid && (BCJsonValueNull == mType || BCJsonValueNull == type)) ||
@@ -200,7 +157,7 @@ public:
     }
     const BCJsonValue& get(const std::string& key) const {
         assertType(BCJsonValueObject, false);
-        const std::map<std::string, BCJsonValue>::const_iterator it = mMembers.find(key);
+        const const_iterator it = mMembers.find(key);
         if (mMembers.end() == it) {
             throw BCJsonInvalidKeyException(key);
         }

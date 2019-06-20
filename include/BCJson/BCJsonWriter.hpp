@@ -21,7 +21,7 @@ namespace BCJson {
 class BCJsonWriter
 {
 public:
-    static std::string write(BCJsonValue& value) {
+    static std::string write(const BCJsonValue& value) {
         switch (value.getType()) {
             case BCJsonValueString:     return std::string("\"") + value.getString() + std::string("\"");
             case BCJsonValueNumber:     return std::to_string(value.getNumber());
@@ -48,8 +48,8 @@ public:
                     if (it != itBegin) {
                         rv += ",";
                     }
-                    rv += "\""+it.getKey()+"\":";
-                    rv += write(it.getValue());
+                    rv += "\""+it->first+"\":";
+                    rv += write(it->second);
                 }
                 rv += std::string("}");
                 return rv;
