@@ -70,10 +70,10 @@ add_executable(
     test/testWriter.cpp
     )
 target_link_libraries(BCJsonTest gtest_main)
-target_link_libraries(BCJsonTest BCJson)
+target_link_libraries(BCJsonTest BCJson ${COVERAGE_OPTIONS})
 if(MSVC)
   target_compile_options(BCJsonTest PRIVATE /W4 /WX)
 else()
-  target_compile_options(BCJsonTest PRIVATE -Wall -Wextra -pedantic -Werror)
+  target_compile_options(BCJsonTest PRIVATE -Wall -Wextra -pedantic -Werror ${COVERAGE_OPTIONS})
 endif()
 add_test(NAME BCJsonTestName COMMAND BCJsonTest)
