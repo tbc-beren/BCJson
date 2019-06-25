@@ -75,13 +75,6 @@ public:
         }
     }
 
-    void advanceOne() {
-        if (*mPos != 0) {
-            advanceChar();
-            advance();
-        }
-    }
-
     BCJsonValue parse() {
         BCJsonValue root;
         advance();
@@ -325,38 +318,6 @@ public:
 private:
     void advanceChar() {
         mPos++;
-    }
-    void parseArray(BCJsonValue& cur) {
-        char chr;
-        do {
-            chr = *mPos;
-            switch (chr) {
-            case '{':   advanceChar();  break;
-            case '[':   advanceChar();  cur.setType(BCJsonValueArray);      break;
-            case '\"':
-            {
-                std::string str = parseString();
-                cur.add(str);
-            }
-            break;
-            default:
-                throwParseException();
-                break;
-            }
-            advance();
-            chr = *mPos;
-            if (chr == ',') {
-                advanceOne();
-            }
-        } while (chr == ',');
-
-        if (chr == ']') {
-            advanceOne();
-            mState.pop();
-        }
-        else {
-            throwParseException();
-        }
     }
     static char replaceStringChar(char src) {
         static const char table[] = "\"nr\\tfb";
