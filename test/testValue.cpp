@@ -20,6 +20,17 @@ namespace {
         EXPECT_THROW(obj2.assertType(BCJsonValueNull, false), BCJsonInvalidTypeException);
         EXPECT_THROW(obj2.assertType(BCJsonValueArray, false), BCJsonInvalidTypeException);
     }
+    TEST(BCJsonValue, testAssertTypeException) {
+        bool thrown = false;
+        BCJsonValue obj(BCJsonValueObject);
+        try {
+            obj.assertType(BCJsonValueNull, false);
+        } catch (const BCJsonInvalidTypeException& e) {
+            thrown = true;
+            EXPECT_EQ(BCJsonValueObject, e.getType());
+        }
+        EXPECT_TRUE(thrown);
+    }
     TEST(BCJsonValue, DefaultValue) {
         BCJsonValue obj;
         BCJsonValue& s = obj.get("ObjString");

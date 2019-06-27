@@ -1,7 +1,16 @@
 #
+# === Coverage ===============================================================
 # cmake .. -DBCJSON_TESTCOVERAGE=1
-#             lcov -t "result" -o coverage.info -c -d .
-#             genhtml -o cov-results coverage.info
+# rm *.info
+# rm -rf cov-results
+# lcov -t "result" -o coverage_01.info -c -d .
+# lcov --remove coverage_01.info -o coverage.info \
+#     '/usr/include/*' \
+#     '*/googletest-src/*'
+# genhtml -o cov-results coverage.info
+#
+#
+# === Build Debug ============================================================
 # cmake .. -DCMAKE_BUILD_TYPE=Debug
 #
 cmake_minimum_required (VERSION 3.8)

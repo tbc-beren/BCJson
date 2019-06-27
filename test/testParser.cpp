@@ -38,6 +38,11 @@ namespace {
         BCJsonValue root = parser.parse();
         BCTestTools::checkUnsigned(root, "int", 65535);
     }
+    TEST(testBCJsonParser, testParseObjectSignedInteger) {
+        BCJsonParser parser(" { \"int\": -65530 } ");
+        BCJsonValue root = parser.parse();
+        BCTestTools::checkSigned(root, "int", -65530);
+    }
     TEST(testBCJsonParser, testParseSubObject) {
         BCJsonParser parser(" { \"k\": { \"k2\":\"val\" } } ");
         BCJsonValue root = parser.parse();
