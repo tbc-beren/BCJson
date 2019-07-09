@@ -129,13 +129,34 @@ namespace {
 
     void assertInvalidJson(const std::string& txt) {
         bool invalid = false;
+        BCJsonParser parser(txt.c_str());
         try {
-            BCJsonParser parser(txt.c_str());
             BCJsonValue root = parser.parse();
         }
-        catch (const std::runtime_error&) {
+        catch (const BCJsonParserException&ex) {
             invalid = true;
+            std::string msg = parser.getError(ex);
+            if (msg.length() > 80) {
+                msg.resize(80);
+            }
+
+            size_t offset = ex.getOffset();
+            int col = parser.getColumn(offset);
+            std::cout << std::endl;
+            std::cout << "Error at line " << parser.getLine(offset) << "(" << col << ")" << ": " << ex.what() << std::endl;
+            std::cout << "       " << msg << std::endl;
+            std::cout << "       ";
+            while(col-- > 0) {
+                std::cout << " ";
+            }
+            std::cout << "^" << std::endl;
+            std::cout << std::endl;
         }
-        ASSERT_TRUE(invalid);
+        catch (const BCJsonException&ex) {
+            invalid = true;
+            std::cout << "BCJsonException: " << ex.what() << std::endl;
+            std::cout << "       " << txt << std::endl;
+        }
+        EXPECT_TRUE(invalid);
     }
 }

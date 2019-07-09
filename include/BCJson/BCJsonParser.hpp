@@ -19,24 +19,18 @@ namespace BlackCodex {
 namespace BCJson {
 
 class BCJsonParserException : public BCJsonException {
-    int mLine;
-    int mColumn;
+    size_t mOffset;
 public:
-    BCJsonParserException(const char* message, int line = 0, int column = 0)
+    BCJsonParserException(const char* message, size_t offset=0)
         : BCJsonException(message)
-        , mLine(line)
-        , mColumn(column)
+        , mOffset(offset)
     {}
-    BCJsonParserException(const std::string& message, int line = 0, int column = 0)
+    BCJsonParserException(const std::string& message, size_t offset=0)
         : BCJsonException(message)
-        , mLine(line)
-        , mColumn(column)
+        , mOffset(offset)
     {}
-    int getLine() const {
-        return mLine;
-    }
-    int getColumn() const {
-        return mColumn;
+    size_t getOffset() const {
+        return mOffset;
     }
 };
 
@@ -76,6 +70,35 @@ public:
 
     const char* getStart() const {
         return mStart;
+    }
+    std::pair<int, int> getLineAndColumn(size_t offset) const {
+        std::pair<int, int> ret(1, 0);
+        const char* tmp = mStart;
+        while(0 < offset--) {
+            ret.second++;
+            if ('\r' == *tmp++ ) {
+                ret.first++;
+                ret.second = 0;
+            }
+        }
+        return ret;
+    }
+    int getLine(size_t offset) const {
+        auto lineCol = getLineAndColumn(offset);
+        return lineCol.first;
+    }
+    int getColumn(size_t offset) const {
+        auto lineCol = getLineAndColumn(offset);
+        return lineCol.second;
+    }
+
+    const char* getError(const BCJsonParserException& ex) const {
+        const char* err = getStart()+ex.getOffset();
+        const char* base = mStart;
+        while(err>base && '\r' != *err) {
+            err--;
+        }
+        return err;
     }
 
     void advance() {
@@ -151,7 +174,7 @@ public:
                         break;
 
                     default:
-                        throw std::runtime_error("invalid state");
+                        throwParseException("invalid state");
                     }
                 }
                 break;
@@ -166,7 +189,7 @@ public:
                         break;
 
                     default:
-                        throw std::runtime_error("invalid state");
+                        throwParseException("invalid state");
                     }
                 }
                 break;
@@ -179,12 +202,12 @@ public:
                     setState(MObjectValue);
                     break;
                 default:
-                    throw std::runtime_error("invalid state");
+                    throwParseException("invalid state");
                 }
             }
             break;
             default:
-                throw BCJsonParserException(std::string("invalid state: unexpected ")+chr);
+                throwParseException(std::string("invalid state: unexpected ")+chr);
             }
 
             advance();
@@ -357,7 +380,7 @@ private:
             BCJsonValue& r = newVal->set(mState.top().mName, BCJsonValue());
             newVal = &r;
         } else {
-            throw std::runtime_error("invalid state");
+            throwParseException("invalid state");
         }
         newVal->setType(type);
         mState.emplace(mode, newVal);
@@ -374,7 +397,7 @@ private:
         throwParseException(std::string("unexpected char ")+chr);
     }
     void throwParseException(const std::string& message) {
-        throw BCJsonException(message);
+        throw BCJsonParserException(message, mPos-getStart());
     }
 };
 
