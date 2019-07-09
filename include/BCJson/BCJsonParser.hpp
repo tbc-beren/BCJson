@@ -27,12 +27,17 @@ public:
         , mLine(line)
         , mColumn(column)
     {}
-
     BCJsonParserException(const std::string& message, int line = 0, int column = 0)
         : BCJsonException(message)
         , mLine(line)
         , mColumn(column)
     {}
+    int getLine() const {
+        return mLine;
+    }
+    int getColumn() const {
+        return mColumn;
+    }
 };
 
 class BCJsonParser
@@ -68,6 +73,10 @@ public:
         : mStart(str)
         , mPos(str)
     {}
+
+    const char* getStart() const {
+        return mStart;
+    }
 
     void advance() {
         while( isWhitespace(*mPos) ) {
