@@ -9,6 +9,12 @@ namespace {
 
     void assertInvalidJson(const std::string& txt);
 
+    TEST(testBCJsonParser, testParseEmptyString) {
+        BCJsonParser parser("   ");
+        BCJsonValue root = parser.parse();
+        ASSERT_EQ(BCJsonValueNull, root.getType());
+        ASSERT_TRUE(root.isEmpty());
+    }
     TEST(testBCJsonParser, testParseObjectEmpty) {
         BCJsonParser parser(" { } ");
         BCJsonValue root = parser.parse();
