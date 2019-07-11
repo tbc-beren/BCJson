@@ -28,15 +28,25 @@ namespace {
         ASSERT_TRUE(array.has(4));
         ASSERT_FALSE(array.has(5));
 
+        // Please note these lines test two different use cases.
+        // Having both improves test coverage
+        //
+        // EXPECT_EQ(E, array.get(2).getDouble());  // Access to item and then value
+        // EXPECT_EQ(E, array.getDouble(2));        // Direct access to item's value
+
         BCTestTools::checkString(array, 0, "ItemString");
         EXPECT_EQ(BCJsonValueFloat, array.get(1).getType());
         EXPECT_EQ(PI, array.get(1).getDouble());
+        EXPECT_EQ(PI, array.getDouble(1));
         EXPECT_EQ(BCJsonValueFloat, array.get(2).getType());
         EXPECT_EQ(E, array.get(2).getDouble());
+        EXPECT_EQ(E, array.getDouble(2));
         EXPECT_EQ(BCJsonValueNumber, array.get(3).getType());
         EXPECT_EQ(PERFECT_POWER, array.get(3).getUnsigned());
+        EXPECT_EQ(PERFECT_POWER, array.getUnsigned(3));
         EXPECT_EQ(BCJsonValueNumber, array.get(4).getType());
         EXPECT_EQ(HUNDRED, array.get(4).getNumber());
+        EXPECT_EQ(HUNDRED, array.getNumber(4));
     }
     TEST(testBCJsonArray, SubArray) {
         BCJsonValue array;

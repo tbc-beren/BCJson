@@ -19,20 +19,34 @@ namespace {
         object.set("kDouble", E);
         object.set("kChar", PERFECT_POWER);
         object.set("kUint", HUNDRED);
+        object.set("kBool", true);
 
         EXPECT_EQ(BCJsonValueObject, object.getType());
         ASSERT_TRUE(object.has("kStr"));
         ASSERT_FALSE(object.has("noFIeld"));
 
+        // Please note these lines test two different use cases.
+        // Having both improves test coverage
+        //
+        // EXPECT_EQ(E, array.get("Item").getDouble());  // Access to item and then value
+        // EXPECT_EQ(E, array.getDouble("Item"));        // Direct access to item's value
+
         BCTestTools::checkString(object, "kStr", "ItemString");
         EXPECT_EQ(BCJsonValueFloat, object.get("kFloat").getType());
         EXPECT_EQ(PI, object.get("kFloat").getDouble());
+        EXPECT_EQ(PI, object.getDouble("kFloat"));
         EXPECT_EQ(BCJsonValueFloat, object.get("kDouble").getType());
         EXPECT_EQ(E, object.get("kDouble").getDouble());
+        EXPECT_EQ(E, object.getDouble("kDouble"));
         EXPECT_EQ(BCJsonValueNumber, object.get("kChar").getType());
         EXPECT_EQ(PERFECT_POWER, object.get("kChar").getUnsigned());
+        EXPECT_EQ(PERFECT_POWER, object.getUnsigned("kChar"));
         EXPECT_EQ(BCJsonValueNumber, object.get("kUint").getType());
         EXPECT_EQ(HUNDRED, object.get("kUint").getNumber());
+        EXPECT_EQ(HUNDRED, object.getNumber("kUint"));
+        EXPECT_EQ(BCJsonValueTrue, object.get("kBool").getType());
+        EXPECT_TRUE(object.get("kBool").getBool());
+        EXPECT_TRUE(object.getBool("kBool"));
     }
     TEST(testBCJsonObject, keyDoesNotExist) {
         BCJsonValue object;

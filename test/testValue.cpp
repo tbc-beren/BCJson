@@ -52,4 +52,25 @@ namespace {
         BCJsonValue& f = obj.get("ObjFloat");
         EXPECT_EQ(BCJsonValueFloat, f.getType());
     }
+    TEST(BCJsonValue, ValueDouble) {
+        static const double TEST_VALUE = 333.0;
+
+        BCJsonValue obj;
+        obj.set("ObjDouble", 2.0);
+
+        BCJsonValue& s = obj.get("ObjDouble");
+        EXPECT_EQ(BCJsonValueFloat, s.getType());
+
+        s.set(TEST_VALUE);
+        EXPECT_EQ(TEST_VALUE, s.getDouble());
+    }
+    TEST(BCJsonValue, testBoolType) {
+        BCJsonValue objTrue(BCJsonValueTrue);
+        BCJsonValue objFalse(BCJsonValueFalse);
+        BCJsonValue objString("SomeString");
+
+        ASSERT_TRUE(objTrue.getBool());
+        ASSERT_FALSE(objFalse.getBool());
+        EXPECT_THROW(objString.getBool(), BCJsonInvalidTypeException);
+    }
 }
