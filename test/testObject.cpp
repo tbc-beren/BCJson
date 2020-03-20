@@ -11,14 +11,16 @@ namespace {
         static const float PI = 3.14159f;
         static const double E = 2.7182818284590452353602874713527;
         static const char HUNDRED = 100;
+        static const unsigned int THOUSAND = 1000U;
         static const uint64_t PERFECT_POWER = 9814072356;
 
         BCJsonValue object(BCJsonValueObject);
         object.set("kStr", "ItemString");
         object.set("kFloat", PI);
         object.set("kDouble", E);
-        object.set("kChar", PERFECT_POWER);
-        object.set("kUint", HUNDRED);
+        object.set("kUint64", PERFECT_POWER);
+        object.set("kChar", HUNDRED);
+        object.set("kUint", THOUSAND);
         object.set("kBool", true);
 
         EXPECT_EQ(BCJsonValueObject, object.getType());
@@ -38,12 +40,15 @@ namespace {
         EXPECT_EQ(BCJsonValueFloat, object.get("kDouble").getType());
         EXPECT_EQ(E, object.get("kDouble").getDouble());
         EXPECT_EQ(E, object.getDouble("kDouble"));
-        EXPECT_EQ(BCJsonValueNumber, object.get("kChar").getType());
-        EXPECT_EQ(PERFECT_POWER, object.get("kChar").getUnsigned());
-        EXPECT_EQ(PERFECT_POWER, object.getUnsigned("kChar"));
         EXPECT_EQ(BCJsonValueNumber, object.get("kUint").getType());
-        EXPECT_EQ(HUNDRED, object.get("kUint").getNumber());
-        EXPECT_EQ(HUNDRED, object.getNumber("kUint"));
+        EXPECT_EQ(THOUSAND, object.get("kUint").getUnsigned());
+        EXPECT_EQ(THOUSAND, object.getUnsigned("kUint"));
+        EXPECT_EQ(BCJsonValueNumber, object.get("kUint64").getType());
+        EXPECT_EQ(PERFECT_POWER, object.get("kUint64").getUnsigned());
+        EXPECT_EQ(PERFECT_POWER, object.getUnsigned("kUint64"));
+        EXPECT_EQ(BCJsonValueNumber, object.get("kChar").getType());
+        EXPECT_EQ(HUNDRED, object.get("kChar").getNumber());
+        EXPECT_EQ(HUNDRED, object.getNumber("kChar"));
         EXPECT_EQ(BCJsonValueTrue, object.get("kBool").getType());
         EXPECT_TRUE(object.get("kBool").getBool());
         EXPECT_TRUE(object.getBool("kBool"));

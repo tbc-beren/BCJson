@@ -70,6 +70,10 @@ public:
         : mType(BCJsonValueNumber)
         , mValUnsigned(i)
         {}
+    BCJsonValue(unsigned int i)
+        : mType(BCJsonValueNumber)
+        , mValUnsigned(i)
+        {}
     BCJsonValue(int64_t i)
         : mType(BCJsonValueNumber)
         , mValSigned(i)
