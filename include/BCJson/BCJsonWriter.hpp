@@ -23,6 +23,8 @@ class BCJsonWriter
 public:
     static std::string write(const BCJsonValue& value) {
         switch (value.getType()) {
+            case BCJsonValueTrue:       return "true";
+            case BCJsonValueFalse:      return "false";
             case BCJsonValueString:     return std::string("\"") + value.getString() + std::string("\"");
             case BCJsonValueNumber:     return std::to_string(value.getNumber());
             case BCJsonValueFloat:      return std::to_string(value.getDouble());
