@@ -1,8 +1,8 @@
-#include <gtest/gtest.h>
+#include <BCJson/BCJson.hpp>
 
 #include "testTools.h"
 
-#include <BCJson/BCJson.hpp>
+#include <gtest/gtest.h>
 
 namespace {
     using namespace BlackCodex::BCJson;

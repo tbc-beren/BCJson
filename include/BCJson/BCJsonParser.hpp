@@ -13,6 +13,7 @@
 #include <BCJson/BCJson.hpp>
 #include <BCJson/BCJsonException.hpp>
 
+#include <cstring>
 #include <stack>
 
 namespace BlackCodex {

@@ -1,9 +1,9 @@
-#include <gtest/gtest.h>
+#include <BCJson/BCJsonParser.hpp>
+#include <BCJson/BCJsonWriter.hpp>
 
 #include "testTools.h"
 
-#include <BCJson/BCJsonParser.hpp>
-#include <BCJson/BCJsonWriter.hpp>
+#include <gtest/gtest.h>
 
 #include <iostream>
 
