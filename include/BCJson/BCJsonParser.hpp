@@ -184,6 +184,7 @@ public:
                     {
                     case MObjectEnd:
                         setState(MObjectName);
+                        // Fallthru
                     case MArray:
                         advanceChar();
                         break;
