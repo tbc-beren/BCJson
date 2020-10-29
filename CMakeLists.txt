@@ -1,4 +1,6 @@
 #
+# BCJSON_SKIP_GTEST_DOWNLOAD    Allows to skip GTEST download (I.E. multiproytect scenario)
+#
 # === Coverage ===============================================================
 # cmake .. -DBCJSON_TESTCOVERAGE=1
 # rm *.info
@@ -25,6 +27,12 @@ target_include_directories(BCJson INTERFACE include/)
 
 
 
+
+if (DEFINED BCJSON_SKIP_GTEST_DOWNLOAD)
+
+message(STATUS "BCJSON: GTest download skipped")
+
+else()
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
@@ -56,6 +64,8 @@ add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
 # later. Otherwise we have to add them here ourselves.
 if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
+endif()
+
 endif()
 
 
