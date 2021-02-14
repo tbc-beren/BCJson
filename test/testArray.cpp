@@ -15,18 +15,20 @@ namespace {
         static const double E = 2.7182818284590452353602874713527;
         static const char HUNDRED = 100;
         static const uint64_t PERFECT_POWER = 9814072356;
+        static const int64_t PERFECT_POWER_SIGNED = 9814072356;
 
         BCJsonValue array;
         array.add("ItemString");
         array.add(PI);
         array.add(E);
         array.add(PERFECT_POWER);
+        array.add(PERFECT_POWER_SIGNED);
         array.add(HUNDRED);
 
         ASSERT_EQ(BCJsonValueArray, array.getType());
-        ASSERT_EQ(5UL, array.getSize());
-        ASSERT_TRUE(array.has(4));
-        ASSERT_FALSE(array.has(5));
+        ASSERT_EQ(6UL, array.getSize());
+        ASSERT_TRUE(array.has(5));
+        ASSERT_FALSE(array.has(6));
 
         // Please note these lines test two different use cases.
         // Having both improves test coverage
@@ -45,8 +47,11 @@ namespace {
         EXPECT_EQ(PERFECT_POWER, array.get(3).getUnsigned());
         EXPECT_EQ(PERFECT_POWER, array.getUnsigned(3));
         EXPECT_EQ(BCJsonValueNumber, array.get(4).getType());
-        EXPECT_EQ(HUNDRED, array.get(4).getNumber());
-        EXPECT_EQ(HUNDRED, array.getNumber(4));
+        EXPECT_EQ(PERFECT_POWER_SIGNED, array.get(4).getUnsigned());
+        EXPECT_EQ(PERFECT_POWER_SIGNED, array.getUnsigned(4));
+        EXPECT_EQ(BCJsonValueNumber, array.get(5).getType());
+        EXPECT_EQ(HUNDRED, array.get(5).getNumber());
+        EXPECT_EQ(HUNDRED, array.getNumber(5));
     }
     TEST(testBCJsonArray, SubArray) {
         BCJsonValue array;
